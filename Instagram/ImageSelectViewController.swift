@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ImageSelectViewController.swift
 //  Instagram
 //
 //  Created by 畑中 彩里 on 2020/05/11.
@@ -8,13 +8,8 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+class ImageSelectViewController: UIViewController {
+//MARK: Lifecycle
     override func viewDidLoad() {
-        super.viewDidLoad()
-        // Do any additional setup after loading the view.
-    }
-
-
 }
-
+}
