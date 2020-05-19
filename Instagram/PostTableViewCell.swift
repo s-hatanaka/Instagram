@@ -10,8 +10,8 @@ import UIKit
 import FirebaseUI
 
 class PostTableViewCell: UITableViewCell {
-
-//MARK: - Outlet
+    
+    //MARK: - Outlet
     
     @IBOutlet weak var postImageView: UIImageView!
     @IBOutlet weak var likeButton: UIButton!
@@ -21,8 +21,6 @@ class PostTableViewCell: UITableViewCell {
     @IBOutlet weak var commentLabel: UILabel!
     @IBOutlet weak var commentButton: UIButton!
     
-
-    
     // nibからの読み込みが完全に終わった時に呼び出される
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -31,7 +29,7 @@ class PostTableViewCell: UITableViewCell {
     
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
+        
         // Configure the view for the selected state
     }
     
@@ -49,7 +47,7 @@ class PostTableViewCell: UITableViewCell {
         
         self.dateLabel.text = ""
         if let date = PostData.date {
-           let formatter = DateFormatter()
+            let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm"
             let dateString = formatter.string(from: date)
             self.dateLabel.text = dateString
@@ -68,12 +66,7 @@ class PostTableViewCell: UITableViewCell {
         }
         
         self.commentLabel.text = PostData.comment.joined(separator: "\n")
-
         
         print("\(PostData.comment)")
     }
-    
-   
-       
-    
 }

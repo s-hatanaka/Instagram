@@ -12,10 +12,10 @@ import CLImageEditor
 class ImageSelectViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, CLImageEditorDelegate {
     
     //MARK: - LifeCycle
-        override func viewDidLoad() {
+    override func viewDidLoad() {
     }
     
-
+    
     
     @IBAction func handleLibraryButton(_ sender: UIButton) {
         if UIImagePickerController.isSourceTypeAvailable(.photoLibrary) {

@@ -11,46 +11,46 @@ import Firebase
 import SVProgressHUD
 
 class SettingViewController: UIViewController {
-
-//MARK: - Outlet
+    
+    //MARK: - Outlet
     
     @IBOutlet weak var displayNameTextField: UITextField!
     
-//MARK: - Lifecycle
+    //MARK: - Lifecycle
     
     override func viewDidLoad() {
     }
-        // 画面を表示するたびに実行する
-        override func viewWillAppear(_ animated: Bool) {
-            // 表示名を取得してTextFieldに表示させる
-            let user = Auth.auth().currentUser
-            if let user = user {
+    // 画面を表示するたびに実行する
+    override func viewWillAppear(_ animated: Bool) {
+        // 表示名を取得してTextFieldに表示させる
+        let user = Auth.auth().currentUser
+        if let user = user {
             displayNameTextField.text = user.displayName
-            }
         }
+    }
     
-// MARK: - Action
+    // MARK: - Action
     
     @IBAction func handleChangeButton(_ sender: UIButton) {
         if let displayName = displayNameTextField.text {
             if displayName.isEmpty {
-            SVProgressHUD.showError(withStatus: "表示名を入力して下さい")
-            return
+                SVProgressHUD.showError(withStatus: "表示名を入力して下さい")
+                return
             }
-           // 表示名を設定する
-        let user = Auth.auth().currentUser
-        if let user = user {
-            let changeRequest = user.createProfileChangeRequest()
-            changeRequest.displayName = displayName
-            changeRequest.commitChanges{ error in
-        if let error = error {
-            SVProgressHUD.showError(withStatus: "表示名の変更に失敗しました。")
-            print("DEBUG_PRINT:" + error.localizedDescription)
-            return
-            }
-            print("DEBUG_PRINT: [displayName = \(user.displayName!)] の設定に成功しました。")
-            SVProgressHUD.showSuccess(withStatus: "表示名を変更しました。")
-            }
+            // 表示名を設定する
+            let user = Auth.auth().currentUser
+            if let user = user {
+                let changeRequest = user.createProfileChangeRequest()
+                changeRequest.displayName = displayName
+                changeRequest.commitChanges{ error in
+                    if let error = error {
+                        SVProgressHUD.showError(withStatus: "表示名の変更に失敗しました。")
+                        print("DEBUG_PRINT:" + error.localizedDescription)
+                        return
+                    }
+                    print("DEBUG_PRINT: [displayName = \(user.displayName!)] の設定に成功しました。")
+                    SVProgressHUD.showSuccess(withStatus: "表示名を変更しました。")
+                }
             }
         }
         self.view.endEditing(true)

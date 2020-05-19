@@ -14,17 +14,17 @@ class PostViewController: UIViewController {
     
     var image: UIImage!
     
-//MARK: - Outlet
+    //MARK: - Outlet
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var TextField: UITextField!
     
-//MARK: - Lifecycle
+    //MARK: - Lifecycle
     override func viewDidLoad() {
         // 受け取った画像をImageViewに設定する
         imageView.image = image
-}
- 
-//MARK: - Action
+    }
+    
+    //MARK: - Action
     
     /// 投稿ボタンが押された時
     /// - Parameter sender: UIButton
@@ -42,24 +42,24 @@ class PostViewController: UIViewController {
         imageRef.putData(imageData!, metadata: metadata) { (metadata, error) in
             if error != nil {
                 print(error!)
-        SVProgressHUD.showError(withStatus: "画像のアップロードが失敗しました")
-        // 先頭画面に戻る
-        UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.dismiss(animated: true, completion: nil)}
+                SVProgressHUD.showError(withStatus: "画像のアップロードが失敗しました")
+                // 先頭画面に戻る
+                UIApplication.shared.windows.first { $0.isKeyWindow }?.rootViewController?.dismiss(animated: true, completion: nil)
                 return
+            }
+            let name = Auth.auth().currentUser?.displayName
+            let postDic = [
+                "name": name!,
+                "caption": self.TextField.text!,
+                "date": FieldValue.serverTimestamp(),
+                ] as [String: Any]
+            // Firestoreにデータを保存
+            postRef.setData(postDic)
+            SVProgressHUD.showSuccess(withStatus: "投稿しました")
+            // 先頭画面に戻る
+            UIApplication.shared.windows.first{ $0.isKeyWindow }?.rootViewController?.dismiss(animated: true, completion: nil)
         }
-        let name = Auth.auth().currentUser?.displayName
-        let postDic = [
-         "name": name!,
-         "caption": self.TextField.text!,
-         "date": FieldValue.serverTimestamp(),
-        ] as [String: Any]
-        // Firestoreにデータを保存
-        postRef.setData(postDic)
-        SVProgressHUD.showSuccess(withStatus: "投稿しました")
-        // 先頭画面に戻る
-        UIApplication.shared.windows.first{ $0.isKeyWindow }?.rootViewController?.dismiss(animated: true, completion: nil)
     }
-    
     @IBAction func handleCancelButton(_ sender: UIButton) {
         self.dismiss(animated: true, completion: nil)
     }

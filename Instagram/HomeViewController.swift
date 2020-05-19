@@ -11,7 +11,7 @@ import Firebase
 
 class HomeViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-//MARK: - Outlet
+    //MARK: - Outlet
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -19,7 +19,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
     var postArrary: [PostData] = []
     var listener: ListenerRegistration!
     
-//MARK: - LifeCycle
+    //MARK: - LifeCycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -28,7 +28,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         
         let nib = UINib(nibName: "PostTableViewCell", bundle: nil)
         tableView.register(nib, forCellReuseIdentifier: "Cell")
-}
+    }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -37,26 +37,33 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         // listener未登録なら、登録してスナップショットを受信する
         if Auth.auth().currentUser != nil {
             if listener == nil {
-              let postRef = Firestore.firestore().collection(Const.PostPath).order(by: "date", descending: true)
-              listener = postRef.addSnapshotListener() { (querySnapshot, error) in
-                if let error = error {
-                   print("DEBAG_PRINT: snapshotの取得が失敗しました。\(error)")
-                   return
+                let postRef = Firestore.firestore().collection(Const.PostPath).order(by: "date", descending: true)
+                listener = postRef.addSnapshotListener() { (querySnapshot, error) in
+                    if let error = error {
+                        print("DEBAG_PRINT: snapshotの取得が失敗しました。\(error)")
+                        return
+                    }
+                    // 取得したdocumentをもとにPostDataを作成し、postArrayの配列にする。
+                    self.postArrary = querySnapshot!.documents.map { document in
+                        print("DEBUG_PRINT: document取得　\(document.documentID)")
+                        let postData = PostData(document: document)
+                        return postData
+                    }
+                    // TableViewの表示を更新する
+                    self.tableView.reloadData()
                 }
-                // 取得したdocumentをもとにPostDataを作成し、postArrayの配列にする。
-                self.postArrary = querySnapshot!.documents.map { document in
-                    print("DEBUG_PRINT: document取得　\(document.documentID)")
-                    let postData = PostData(document: document)
-                    return postData
-                }
-                // TableViewの表示を更新する
+            }
+        } else {
+            if listener != nil {
+                listener.remove()
+                listener = nil
+                postArrary = []
                 self.tableView.reloadData()
-                }
             }
         }
         
     }
-//MARK: - func
+    //MARK: - func
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return postArrary.count
     }
@@ -83,7 +90,7 @@ class HomeViewController: UIViewController, UITableViewDelegate, UITableViewData
         if let myid = Auth.auth().currentUser?.uid {
             var updateValue: FieldValue
             if postData.isLiked {
-               updateValue = FieldValue.arrayRemove([myid])
+                updateValue = FieldValue.arrayRemove([myid])
             } else {
                 updateValue = FieldValue.arrayUnion([myid])
             }
