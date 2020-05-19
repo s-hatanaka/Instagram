@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class TabBarController: UITabBarController, UITabBarControllerDelegate {
 //MARK: Lifecycle
@@ -20,6 +21,18 @@ class TabBarController: UITabBarController, UITabBarControllerDelegate {
         self.delegate = self
 
         // Do any additional setup after loading the view.
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+        // currentUserがnilならログインしていない
+        if Auth.auth().currentUser == nil {
+            let loginViewController = self.storyboard?.instantiateViewController(identifier: "Login")
+            // モーダル画面遷移
+            self.present(loginViewController!, animated: true, completion: nil)
+        }
+        
     }
     
 //MARK: func
